@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
-@RestController("/login")
+@RestController
 public class CurrencyExchangeController1 {
 	
 	@Autowired
