@@ -1,11 +1,15 @@
 package com.in28minutes.microservices.currency_conversion_service.controller;
 
 import com.in28minutes.microservices.currency_conversion_service.entities.CurrencyConversion;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
 
 @RestController
 public class CurrencyConversionContrroller {
@@ -16,7 +20,16 @@ public class CurrencyConversionContrroller {
 			@PathVariable String to,
 			@PathVariable BigDecimal quantity
 	){
-		return new CurrencyConversion(1000l,from,to,quantity,BigDecimal.ONE,BigDecimal.ONE,"");
+		HashMap<String,String> uriVariables=new HashMap<>();
+		uriVariables.put("from",from);
+		uriVariables.put("to",to);
+		ResponseEntity<CurrencyConversion> restTemplate = new RestTemplate().getForEntity(
+				"http://localhost:8000/currency-exchange/from/{from}/to/{to}",
+				CurrencyConversion.class,
+				uriVariables
+		);
+		CurrencyConversion currencyConversion=restTemplate.getBody();
+		return new CurrencyConversion(currencyConversion.getId(),from,to,quantity,currencyConversion.getConversionMultiple(),quantity.multiply(currencyConversion.getConversionMultiple()),currencyConversion.getEnvironment());
 	
 	}
 }
