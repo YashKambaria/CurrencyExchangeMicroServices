@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class CircuitBreakerController {
 	@GetMapping("/get")
-	@Retry(name = "default")
+	@Retry(name = "sample-api")
 	public String get(){
 		log.info("-----------------> Attempted to get data");
 		ResponseEntity<String> entity = new RestTemplate().getForEntity("http://localhost:8010/get", String.class);
